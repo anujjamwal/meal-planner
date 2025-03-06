@@ -35,12 +35,12 @@ jobs:
           ruby-version: '3.1'
           bundler-cache: true
       # Add or replace database setup steps here
-      - name: Set working directory
-        run: cd meal-planner
       - name: Set up database schema
+        working-directory: meal-planner
         run: bin/rails db:prepare
       # Add or replace test runners here
       - name: Run tests
+        working-directory: meal-planner
         run: bin/rails test
 
   lint:
@@ -48,19 +48,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set working directory
-        run: cd meal-planner
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
           bundler-cache: true
       - name: Generate binstubs
+        working-directory: meal-planner
         run: bundle binstubs bundler-audit brakeman rubocop
       # Add or replace any other lints here
       - name: Security audit dependencies
+        working-directory: meal-planner
         run: bin/bundler-audit --update
       - name: Security audit application code
+        working-directory: meal-planner
         run: bin/brakeman -q -w2
       - name: Lint Ruby files
+        working-directory: meal-planner
         run: bin/rubocop --parallel
